@@ -9,11 +9,9 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * MyBatis Plus 配置
- *
- * @author https://github.com/liyupi
  */
 @Configuration
-@MapperScan("com.yupi.dddada.mapper")
+@MapperScan("com.dd.dddada.mapper")
 public class MyBatisPlusConfig {
 
     /**

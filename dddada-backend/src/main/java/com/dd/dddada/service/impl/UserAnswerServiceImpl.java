@@ -54,8 +54,6 @@ public class UserAnswerServiceImpl extends ServiceImpl<UserAnswerMapper, UserAns
         ThrowUtils.throwIf(userAnswer == null, ErrorCode.PARAMS_ERROR);
         // 从对象中取值
         Long appId = userAnswer.getAppId();
-
-
         // 创建数据时，参数不能为空
         if (add) {
             //  补充校验规则
@@ -63,7 +61,7 @@ public class UserAnswerServiceImpl extends ServiceImpl<UserAnswerMapper, UserAns
         }
         // 修改数据时，有参数则校验
         //  补充校验规则
-        if (appId != null) {
+        if (appId == null) {
             App app = appService.getById(appId);
             ThrowUtils.throwIf(ObjectUtils.isNotEmpty(app), ErrorCode.PARAMS_ERROR, "app不存在");
         }

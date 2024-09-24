@@ -64,7 +64,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }
         // 修改数据时，有参数则校验
         // 补充校验规则
-        if (appId != null) {
+        if (appId == null) {
             App app = appService.getById(appId);
             ThrowUtils.throwIf(ObjectUtils.isNotEmpty(app), ErrorCode.PARAMS_ERROR, "app不存在");
         }

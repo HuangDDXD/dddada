@@ -69,7 +69,7 @@ public class ScoringResultServiceImpl extends ServiceImpl<ScoringResultMapper, S
         if (StringUtils.isNotBlank(resultName)) {
             ThrowUtils.throwIf(resultName.length() > 256, ErrorCode.PARAMS_ERROR, "评分结果名称不能超过256个字符");
         }
-        if (appId != null) {
+        if (appId == null) {
             App app = appService.getById(appId);
             ThrowUtils.throwIf(ObjectUtils.isNotEmpty(app), ErrorCode.PARAMS_ERROR, "app不存在");
         }

@@ -4,9 +4,7 @@ import com.dd.dddada.common.ErrorCode;
 
 /**
  * 抛异常工具类
- *
- * 
- * 
+*
  */
 public class ThrowUtils {
 

@@ -7,9 +7,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * 用户角色枚举
- *
- * 
- * 
+*
  */
 public enum UserRoleEnum {
 

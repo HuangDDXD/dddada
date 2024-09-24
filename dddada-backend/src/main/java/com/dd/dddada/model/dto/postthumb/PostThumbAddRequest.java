@@ -5,9 +5,7 @@ import lombok.Data;
 
 /**
  * 帖子点赞请求
- *
- * 
- * 
+*
  */
 @Data
 public class PostThumbAddRequest implements Serializable {

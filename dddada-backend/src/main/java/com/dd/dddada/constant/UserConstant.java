@@ -2,9 +2,7 @@ package com.dd.dddada.constant;
 
 /**
  * 用户常量
- *
- * 
- * 
+*
  */
 public interface UserConstant {
 

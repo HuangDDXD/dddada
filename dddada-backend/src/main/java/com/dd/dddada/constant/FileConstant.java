@@ -2,9 +2,7 @@ package com.dd.dddada.constant;
 
 /**
  * 文件常量
- *
- * 
- * 
+*
  */
 public interface FileConstant {
 

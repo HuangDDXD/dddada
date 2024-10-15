@@ -12,9 +12,7 @@ import com.dd.dddada.service.QuestionService;
 import com.dd.dddada.service.ScoringResultService;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @ScoringStrategyConfig(appType = 0, scoringStrategy = 0)

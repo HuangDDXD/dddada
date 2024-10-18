@@ -7,6 +7,7 @@ import com.dd.dddada.common.BaseResponse;
 import com.dd.dddada.common.DeleteRequest;
 import com.dd.dddada.common.ErrorCode;
 import com.dd.dddada.common.ResultUtils;
+import com.dd.dddada.config.VipScheduleConfig;
 import com.dd.dddada.constant.UserConstant;
 import com.dd.dddada.exception.BusinessException;
 import com.dd.dddada.exception.ThrowUtils;
@@ -22,6 +23,7 @@ import com.dd.dddada.service.QuestionService;
 import com.dd.dddada.service.UserService;
 import com.zhipu.oapi.service.v4.model.ModelData;
 import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +59,9 @@ public class QuestionController {
 
     @Resource
     private AiManager aiManager;
+
+    @Resource
+    private Scheduler vipSchedule;
     // region 增删改查
 
     /**
@@ -290,7 +295,7 @@ public class QuestionController {
     }
 
     @PostMapping("/ai_generate")
-    public BaseResponse<List<QuestionContentDTO>> aiGenerateQuestion(@RequestBody AiGenerateQuestionRequest aiGenerateQuestionRequest) {
+    public BaseResponse<List<QuestionContentDTO>> aiGenerateQuestion(@RequestBody AiGenerateQuestionRequest aiGenerateQuestionRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(aiGenerateQuestionRequest == null, ErrorCode.PARAMS_ERROR);
         // 获取参数
         Long appId = aiGenerateQuestionRequest.getAppId();
@@ -311,7 +316,10 @@ public class QuestionController {
     }
 
     @GetMapping("/ai_generate/sse")
-    public SseEmitter aiGenerateQuestionSSE(AiGenerateQuestionRequest aiGenerateQuestionRequest) {
+    public SseEmitter aiGenerateQuestionSSE(AiGenerateQuestionRequest aiGenerateQuestionRequest, HttpServletRequest request) {
+        String contentType = request.getContentType();
+        System.out.println("---------------------------------------------------------------");
+        System.out.println(contentType);
         ThrowUtils.throwIf(aiGenerateQuestionRequest == null, ErrorCode.PARAMS_ERROR);
         // 获取参数
         Long appId = aiGenerateQuestionRequest.getAppId();
@@ -327,8 +335,14 @@ public class QuestionController {
         Flowable<ModelData> modelDataFlowable = aiManager.doStreamRequest(GENERATE_QUESTION_SYSTEM_MESSAGE, userMessage, null);
         StringBuilder contentBuilder = new StringBuilder();
         AtomicInteger counter = new AtomicInteger();
+
+        Scheduler scheduler = Schedulers.io();
+        User loginUser = userService.getLoginUser(request);
+        if ("admin".equals(loginUser.getUserRole())) {
+            scheduler = vipSchedule;
+        }
         modelDataFlowable
-                .observeOn(Schedulers.io())
+                .observeOn(scheduler)
                 .map(modelData -> modelData.getChoices().get(0).getDelta().getContent())
                 .map(message -> message.replaceAll("\\s", ""))
                 .filter(StringUtils::isNotBlank)
